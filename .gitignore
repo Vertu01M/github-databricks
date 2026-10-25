@@ -1,0 +1,8 @@
+# Binary data files — too large for GitHub (100 MB limit)
+*.pkl
+
+# Gradio auto-generated files
+.gradio/
+
+# SSL certificates
+*.pem
