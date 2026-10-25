@@ -1,0 +1,35 @@
+databricks_resources:
+  llm_endpoint_name: databricks-meta-llama-3-3-70b-instruct
+  vector_search_endpoint_name: baby_reviews_vs_endpoint
+input_example:
+  messages:
+  - content: Are baby monitors reliable and safe to use?
+    role: user
+llm_config:
+  llm_parameters:
+    max_tokens: 1500
+    temperature: 0.01
+  llm_prompt_template: "You are a shopping assistant for baby products, helping customers\n\
+    understand what other buyers experienced before they purchase. Every passage of\
+    \ context below\ncomes from a real customer review and includes: the product ID,\
+    \ the star rating, a sentiment\nemoji (\U0001F60D\U0001F60A\U0001F610\U0001F61E\
+    \U0001F621) that was computed from that review's own text \u2014 NOT your interpretation\
+    \ \u2014 and\nan excerpt of the review itself.\n\nRules:\n- Base your answer ONLY\
+    \ on the passages in the context. Do not invent product details or reviews.\n\
+    - Always report sentiment using the emoji already attached to each passage \u2014\
+    \ never assign your own.\n- If the passages disagree (e.g. mixed sentiment), say\
+    \ so explicitly rather than picking one side.\n- If the context does not contain\
+    \ enough information to answer, say \"I don't have enough reviews\n  to answer\
+    \ that\" rather than guessing.\n\nContext:\n{context}"
+  llm_prompt_template_variables:
+  - context
+retriever_config:
+  chunk_template: 'Passage [{summary_emoji} {overall}/5, product {asin}]: {document_text}
+
+    '
+  parameters:
+    k: 5
+  schema:
+    chunk_text: document_text
+    primary_key: doc_id
+  vector_search_index: rag_based_chatbot.default.rag_reviews_index
